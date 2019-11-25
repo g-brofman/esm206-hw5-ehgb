@@ -1,0 +1,19 @@
+---
+title: "esm206-hw5-ehgb"
+author: "Evan Heberlein & Grace Brofman"
+date: "11/25/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Intro & methods last
+
+Results:
+Section A visualize - Evan
+Section B table - Grace
+Section C chi squared - Grace
+Section D t-test - Grace
+Section E ANOVA - Evan
