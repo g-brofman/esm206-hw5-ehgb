@@ -17,3 +17,32 @@ Section B table - Grace
 Section C chi squared - Grace
 Section D t-test - Grace
 Section E ANOVA - Evan
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(beeswarm)
+```
+
+```{r}
+salamanders <- read_csv("mack_creek_vertebrates.csv") %>% 
+  clean_names() %>% 
+  filter(species == "DITE")
+
+view(salamanders)
+
+salamander_violin <- ggplot(data = salamanders, 
+                            aes(x = section, y = length1)) +
+  geom_violin()
+
+salamander_violin
+
+salamander_og <- salamanders %>% 
+  filter(section == "OG")
+
+#og_hist <- ggplot(data = salamander_og, aes(x = ))
+
+salamander_cc <- salamanders %>% 
+  filter(section == "CC")
+```
+
