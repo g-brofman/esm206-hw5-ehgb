@@ -40,6 +40,8 @@ salamander_violin <- ggplot(data = salamanders,
 
 salamander_violin
 
+salamander_beeswarm <- beeswarm(length1 ~ section, data = salamanders)
+
 salamander_og <- salamanders %>% 
   filter(section == "OG")
 
