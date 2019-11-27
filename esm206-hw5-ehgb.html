@@ -466,6 +466,7 @@ salamander_cc &lt;- salamanders %&gt;%
 salamander_2017_counts &lt;- salamanders_2017 %&gt;%  
   count(section, unittype)
 
+
 # making a table / wider format / contingency table
 salamander_2017_table &lt;- salamander_2017_counts %&gt;% 
   pivot_wider(names_from = unittype,
@@ -475,28 +476,32 @@ salamander_2017_table &lt;- salamander_2017_counts %&gt;%
 salamander_2017_props &lt;- salamander_2017_table %&gt;% 
   adorn_percentages(denominator = &quot;row&quot;) %&gt;% 
   adorn_pct_formatting(digits = 1) %&gt;% 
-  adorn_ns(position = &quot;front&quot;)
+  adorn_ns(position = &quot;front&quot;) %&gt;% 
+  rename(Section = section,
+         Cascade = C,
+         Pool = P,
+         Sidechannel = SC)
 
 salamander_2017_props</code></pre>
-<pre><code>##  section           C          P         SC
-##       CC 247 (67.1%) 31  (8.4%) 90 (24.5%)
-##       OG 201 (62.8%) 45 (14.1%) 74 (23.1%)</code></pre>
+<pre><code>##  Section     Cascade       Pool Sidechannel
+##       CC 247 (67.1%) 31  (8.4%)  90 (24.5%)
+##       OG 201 (62.8%) 45 (14.1%)  74 (23.1%)</code></pre>
 <pre class="r"><code>kable(salamander_2017_props) %&gt;% 
   kable_styling()</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
-section
+Section
 </th>
 <th style="text-align:left;">
-C
+Cascade
 </th>
 <th style="text-align:left;">
-P
+Pool
 </th>
 <th style="text-align:left;">
-SC
+Sidechannel
 </th>
 </tr>
 </thead>
@@ -531,6 +536,38 @@ OG
 </tr>
 </tbody>
 </table>
+<pre class="r"><code># Need to rename CC and OG to Clear cut and Old growth!
+# Add table caption above table</code></pre>
+</div>
+<div id="results-c-results-c-chi-square" class="section level3">
+<h3>Results C: Results C: Chi Square</h3>
+<p>Using the 2017 counts found in Results B above, answer: is there a significant difference in where in the channel Pacific giant salamanders are located (pool, cascade or side channel) between the two sections (old growth and clear cut)? Another way to ask this: Regarding the locations where salamanders were observed in Mack Creek in 2017, is there a significant effect of forest condition (old growth or clear cut) on where in the channel salamanders are found (channel classification)? Report your statistical findings in text, in the context of the actual counts / proportions you present in the table.</p>
+<pre class="r"><code># Is there an effect of forest condition (OG vs. CC) on where salamanders are found (channel classification)?
+
+chi_counts &lt;- salamander_2017_table %&gt;% 
+  select(-section) %&gt;% 
+    rename(Cascade = C,
+         Pool = P,
+         Sidechannel = SC)
+
+chi_counts</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   Cascade  Pool Sidechannel
+##     &lt;int&gt; &lt;int&gt;       &lt;int&gt;
+## 1     247    31          90
+## 2     201    45          74</code></pre>
+<p>H0: - There is no significant association between forest condition and salamander location. - Forest condition and salamander location are independent of one another.</p>
+<pre class="r"><code>salamander_chi &lt;- chisq.test(chi_counts)
+
+salamander_chi</code></pre>
+<pre><code>## 
+##  Pearson's Chi-squared test
+## 
+## data:  chi_counts
+## X-squared = 5.5413, df = 2, p-value = 0.06262</code></pre>
+<p>p-value = 0.063 -&gt; cannot reject H0</p>
+<p>Conclusion: - There is no significant association between forest condition and salamander location.</p>
+<p>** Add in-line referencing**</p>
 </div>
 
 
