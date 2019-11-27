@@ -77,5 +77,8 @@ salamander_2017_props <- salamander_2017_table %>%
 
 salamander_2017_props
 
+kable(salamander_2017_props) %>% 
+  kable_styling()
+
 ```
 
