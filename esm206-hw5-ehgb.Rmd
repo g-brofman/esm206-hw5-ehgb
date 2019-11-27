@@ -124,3 +124,8 @@ Conclusion:
 
 ** Add in-line referencing**
 
+
+
+### Results D: 2 sample unpaired t-test
+ Compare weights of Pacific giant salamanders in clear cut and old growth forest sections of the creek in 2017. Only considering creek section (OG or CC) as a variable (not further factoring by channel classification), answer: Is there a significant difference in mean weights for Pacific giant salamanders observed in the two forest sections (clear cut and old growth) in 2017? 
+
