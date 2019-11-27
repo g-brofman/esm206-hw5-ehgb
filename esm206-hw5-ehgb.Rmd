@@ -135,10 +135,27 @@ salamander_17_d <- salamanders %>%
   filter(year == "2017") %>% 
   select(section, weight)
 
+# data exploration:
+
+ggplot(data = salamander_17_d,
+       aes(x = weight)) +
+  geom_histogram() +
+  facet_wrap(~section)
+# both sections seem generally normally distributed...
+ ggplot(data = salamander_17_d,
+        aes(sample = weight)) +
+   geom_qq() +
+   facet_wrap(~section)
+ # QQ plots do not show a normal distribution, but can still compare means. Because of CLT, sampling distribution of the means will be normal.
+
 mean_weight_17 <- salamander_17_d %>% 
   group_by(section) %>% 
   summarize(mean_weight = mean(weight, na.rm = TRUE))  # exclueds observation 696 with no observed weight
 
+# How likely is it that we could have found sample means that are at least this different (7.78, 6.58) by random chance if the true difference in population means is zero?
+
+# H0: there is no difference in means/means are equal
+# Null: means are not equal
 
 ```
  
