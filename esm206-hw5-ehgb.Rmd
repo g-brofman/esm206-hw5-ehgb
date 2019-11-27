@@ -22,6 +22,9 @@ Section E ANOVA - Evan
 library(tidyverse)
 library(janitor)
 library(beeswarm)
+library(car)
+library(ggbeeswarm)
+library(kableExtra)
 ```
 
 ```{r}
@@ -44,5 +47,35 @@ salamander_og <- salamanders %>%
 
 salamander_cc <- salamanders %>% 
   filter(section == "CC")
+```
+
+### Results B: Table
+Results B: Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth (OG) and clear cut (CC) sections of Mack Creek. Using only Pacific giant salamander observations from 2017, create a finalized table showing the counts and proportions of salamanders observed in different channel classifications (pool, cascade, or side-channel) within Mack Creek for the two sections (OG and CC). Add a table caption above the table. Note: We’re only interested in Pacific giant salamanders observed in the creek, so you should exclude salamanders observed in isolated pools (IP) disconnected from the channel. 
+
+```{r}
+
+salamanders_2017 <- salamanders %>%   # contains only section and unittype
+  filter(year == "2017") %>% 
+  select(section, unittype) %>% 
+  filter(unittype != "IP")
+
+
+# finding salamander counts by section and unit type (cascade, pool, side channel)
+salamander_2017_counts <- salamanders_2017 %>%  
+  count(section, unittype)
+
+# making a table / wider format / contingency table
+salamander_2017_table <- salamander_2017_counts %>% 
+  pivot_wider(names_from = unittype,
+              values_from = n)
+
+# making a nicer table! 
+salamander_2017_props <- salamander_2017_table %>% 
+  adorn_percentages(denominator = "row") %>% 
+  adorn_pct_formatting(digits = 1) %>% 
+  adorn_ns(position = "front")
+
+salamander_2017_props
+
 ```
 

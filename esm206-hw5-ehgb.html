@@ -373,12 +373,12 @@ summary {
 <p>Intro &amp; methods last</p>
 <p>Results: Section A visualize - Evan Section B table - Grace Section C chi squared - Grace Section D t-test - Grace Section E ANOVA - Evan</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ───────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ───────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
 ## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
 ## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
-<pre><code>## ── Conflicts ──────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ──────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(janitor)</code></pre>
@@ -387,7 +387,24 @@ summary {
 <pre><code>## The following objects are masked from 'package:stats':
 ## 
 ##     chisq.test, fisher.test</code></pre>
-<pre class="r"><code>library(beeswarm)</code></pre>
+<pre class="r"><code>library(beeswarm)
+library(car)</code></pre>
+<pre><code>## Loading required package: carData</code></pre>
+<pre><code>## 
+## Attaching package: 'car'</code></pre>
+<pre><code>## The following object is masked from 'package:dplyr':
+## 
+##     recode</code></pre>
+<pre><code>## The following object is masked from 'package:purrr':
+## 
+##     some</code></pre>
+<pre class="r"><code>library(ggbeeswarm)
+library(kableExtra)</code></pre>
+<pre><code>## 
+## Attaching package: 'kableExtra'</code></pre>
+<pre><code>## The following object is masked from 'package:dplyr':
+## 
+##     group_rows</code></pre>
 <pre class="r"><code>salamanders &lt;- read_csv(&quot;mack_creek_vertebrates.csv&quot;) %&gt;% 
   clean_names() %&gt;% 
   filter(species == &quot;DITE&quot;)</code></pre>
@@ -427,6 +444,35 @@ salamander_violin</code></pre>
 
 salamander_cc &lt;- salamanders %&gt;% 
   filter(section == &quot;CC&quot;)</code></pre>
+<div id="results-b-table" class="section level3">
+<h3>Results B: Table</h3>
+<p>Results B: Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth (OG) and clear cut (CC) sections of Mack Creek. Using only Pacific giant salamander observations from 2017, create a finalized table showing the counts and proportions of salamanders observed in different channel classifications (pool, cascade, or side-channel) within Mack Creek for the two sections (OG and CC). Add a table caption above the table. Note: We’re only interested in Pacific giant salamanders observed in the creek, so you should exclude salamanders observed in isolated pools (IP) disconnected from the channel.</p>
+<pre class="r"><code>salamanders_2017 &lt;- salamanders %&gt;%   # contains only section and unittype
+  filter(year == &quot;2017&quot;) %&gt;% 
+  select(section, unittype) %&gt;% 
+  filter(unittype != &quot;IP&quot;)
+
+
+# finding salamander counts by section and unit type (cascade, pool, side channel)
+salamander_2017_counts &lt;- salamanders_2017 %&gt;%  
+  count(section, unittype)
+
+# making a table / wider format / contingency table
+salamander_2017_table &lt;- salamander_2017_counts %&gt;% 
+  pivot_wider(names_from = unittype,
+              values_from = n)
+
+# making a nicer table! 
+salamander_2017_props &lt;- salamander_2017_table %&gt;% 
+  adorn_percentages(denominator = &quot;row&quot;) %&gt;% 
+  adorn_pct_formatting(digits = 1) %&gt;% 
+  adorn_ns(position = &quot;front&quot;)
+
+salamander_2017_props</code></pre>
+<pre><code>##  section           C          P         SC
+##       CC 247 (67.1%) 31  (8.4%) 90 (24.5%)
+##       OG 201 (62.8%) 45 (14.1%) 74 (23.1%)</code></pre>
+</div>
 
 
 
