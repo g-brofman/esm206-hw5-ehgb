@@ -26,6 +26,10 @@ library(car)
 library(ggbeeswarm)
 library(kableExtra)
 library(lubridate)
+library(effsize)
+library(DT)
+library(plotly)
+library(RColorBrewer)
 ```
 
 ```{r}
@@ -167,6 +171,13 @@ mean_weight_17 <- salamander_17_d %>%
 
 # H0: there is no difference in means/means are equal
 # Null: means are not equal
+
+salamander_ttest <- t.test(weight ~ section, data = salamander_17_d)
+
+salamander_ttest
+
+salamander_cohend <- cohen.d(weight ~ section, data = salamander_17_d) 
+# is this necessary? since we cannot reject null hypothesis?
 
 ```
  
