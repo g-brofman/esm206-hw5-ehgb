@@ -67,7 +67,7 @@ salamander_line
 ### Results B: Table
 Results B: Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth (OG) and clear cut (CC) sections of Mack Creek. Using only Pacific giant salamander observations from 2017, create a finalized table showing the counts and proportions of salamanders observed in different channel classifications (pool, cascade, or side-channel) within Mack Creek for the two sections (OG and CC). Add a table caption above the table. Note: We’re only interested in Pacific giant salamanders observed in the creek, so you should exclude salamanders observed in isolated pools (IP) disconnected from the channel. 
 
-```{r, inclue = FALSE}
+```{r, include = FALSE}
 
 salamanders_2017 <- salamanders %>%   # contains only section and unittype
   filter(year == "2017") %>% 
