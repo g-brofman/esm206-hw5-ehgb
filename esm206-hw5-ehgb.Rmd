@@ -50,12 +50,16 @@ salamanders <- read_csv("mack_creek_vertebrates.csv") %>%
   clean_names() %>% 
   filter(species == "DITE") %>% 
   mutate(sampledate = lubridate::mdy(sampledate)) %>% 
-  mutate(year = lubridate::year(sampledate))
+  mutate(year = lubridate::year(sampledate)) %>% 
+  mutate(section = replace(section, section == "OG", "Old growth")) %>%
+  mutate(section = replace(section, section == "CC", "Clear cut")) %>% 
+  mutate(unittype = replace(unittype, unittype == "P", "Pool")) %>% 
+  mutate(unittype = replace(unittype, unittype == "C", "Cascade")) %>%
+  mutate(unittype = replace(unittype, unittype == "SC", "Side channel"))
 
 salamanders_counted <- salamanders %>%
-  count(year, section) %>% 
-  mutate(section = replace(section, section == "OG", "Old growth")) %>%
-  mutate(section = replace(section, section == "CC", "Clear cut"))
+  count(year, section)
+  
 
 salamander_line <- ggplot(data = salamanders_counted,
                           aes(x = year,
@@ -101,10 +105,7 @@ salamander_2017_props <- salamander_2017_table %>%
   adorn_percentages(denominator = "row") %>% 
   adorn_pct_formatting(digits = 1) %>% 
   adorn_ns(position = "front") %>% 
-  rename(Section = section,
-         Cascade = C,
-         Pool = P,
-         Sidechannel = SC)
+  rename(Section = section)
 
 
 kable(salamander_2017_props) %>% 
@@ -122,10 +123,7 @@ kable(salamander_2017_props) %>%
 # Is there an effect of forest condition (OG vs. CC) on where salamanders are found (channel classification)?
 
 chi_counts <- salamander_2017_table %>% 
-  select(-section) %>% 
-    rename(Cascade = C,
-         Pool = P,
-         Sidechannel = SC)
+  select(-section)
 
 chi_counts
 ```
@@ -193,10 +191,28 @@ Mean salamander weights did not differ significantly between clear cut and old g
 ```{r}
 #Visualize
 
+mean_p_2017 <- salamanders_2017 %>% 
+  filter(unittype == "Pool")
+
+mean_c_2017 <- salamanders_2017 %>% 
+  filter(unittype == "Cascade")
+
+mean_sc_2017 <- salamanders_2017 %>% 
+  filter(unittype == "Side channel")
+
 graph_2017 <- ggplot(data = salamanders_2017,
                        aes(x = unittype,
                            y = weight)) +
-  geom_beeswarm()
+  geom_jitter() +
+  geom_point(data = mean_c_2017,
+            aes(y = mean(weight)),
+            color = "red",
+            size = 7)
+  
+annotate(geom = "text",
+           label = ", mean = mean(mean_c_2017$weight)",
+           aes(x = "Pool",
+           y = 25))
 
 graph_2017
 
@@ -212,7 +228,7 @@ TukeyHSD(salamander_aov)
 # Only significant difference from SC-P
 
 salamander_2017_sc_p <- salamanders_2017 %>% 
-  filter(unittype %in% c("SC", "P"))
+  filter(unittype %in% c("Side channel", "Pool"))
 
 cohen.d(salamander_2017_sc_p$weight, salamander_2017_sc_p$unittype)
 
