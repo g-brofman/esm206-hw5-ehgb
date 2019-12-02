@@ -153,16 +153,10 @@ salamander_chi
 
 p-value = 0.063 -> cannot reject H0
 
-Conclusion:
-- There is no significant association between forest condition and salamander location.
-
-** Add in-line referencing**
-
-
 
 #### D: Relationship between forest condition and mean salamander weights
 
- 
+
 ```{r, include = FALSE}
 
 salamander_17_d <- salamanders %>% 
@@ -202,6 +196,8 @@ salamander_cohend <- cohen.d(weight ~ section, data = salamander_17_d)
 # is this necessary? since we cannot reject null hypothesis?
 
 ```
+Mean salamander weights did not differ significantly between clear cut and old growth forests [t(693)= `r salamander_ttest$statistic`, p= `r salamander_ttest$p.value`] The actual difference in mean values for clear cut and old growth forests is `r -diff(salamander_ttest$estimate)` grams. It should be noted that data for both locations are skewed, with distributions concentrated toward smaller weights.
+ 
  
 ### **Summary**
 
