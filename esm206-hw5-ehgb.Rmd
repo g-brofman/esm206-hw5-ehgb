@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE, warning = FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
@@ -45,14 +45,14 @@ library(plotly)
 library(RColorBrewer)
 ```
 
-```{r, include = FALSE}
+```{r}
 salamanders <- read_csv("mack_creek_vertebrates.csv") %>% 
   clean_names() %>% 
   filter(species == "DITE") %>% 
   mutate(sampledate = lubridate::mdy(sampledate)) %>% 
   mutate(year = lubridate::year(sampledate))
 
-view(salamanders)
+
 
 salamanders_counted <- salamanders %>%
   count(year, section) %>% 
@@ -60,7 +60,7 @@ salamanders_counted <- salamanders %>%
   mutate(section = replace(section, section == "CC", "Clear cut"))
 
 
-view(salamanders_counted)
+
 
 salamander_line <- ggplot(data = salamanders_counted,
                           aes(x = year,
@@ -80,7 +80,9 @@ salamander_line
 #### B: Salamander counts by channel classification
 
 
-```{r, include = FALSE}
+**Table 1:** Salamander counts by channel classification. In 2017, the highest abundance of salamanders in both clear cut (CC) and old growth (OG) forests were found in cascades (67.1% and 62.8%, respectively), followed by side channels (24.5% and 23.1%), and then pools (8.4% and 14.1%). 
+
+```{r}
 
 salamanders_2017 <- salamanders %>%   # contains only section and unittype
   filter(year == "2017") %>% 
@@ -108,7 +110,6 @@ salamander_2017_props <- salamander_2017_table %>%
          Pool = P,
          Sidechannel = SC)
 
-salamander_2017_props
 
 kable(salamander_2017_props) %>% 
   kable_styling()
