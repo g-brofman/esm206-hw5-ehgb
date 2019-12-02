@@ -29,8 +29,6 @@ Since 1993, data on Pacific Giant Salamanders has been collected in/along Mack C
 
 ### **Results**
 
-#### A: 
-
 ```{r, include = FALSE}
 library(tidyverse)
 library(janitor)
@@ -45,6 +43,8 @@ library(plotly)
 library(RColorBrewer)
 ```
 
+#### A: Visualizing salamander abundance between old growth and clear cut sections of Mack Creek
+
 ```{r}
 salamanders <- read_csv("mack_creek_vertebrates.csv") %>% 
   clean_names() %>% 
@@ -52,21 +52,15 @@ salamanders <- read_csv("mack_creek_vertebrates.csv") %>%
   mutate(sampledate = lubridate::mdy(sampledate)) %>% 
   mutate(year = lubridate::year(sampledate))
 
-
-
 salamanders_counted <- salamanders %>%
   count(year, section) %>% 
   mutate(section = replace(section, section == "OG", "Old growth")) %>%
   mutate(section = replace(section, section == "CC", "Clear cut"))
 
-
-
-
 salamander_line <- ggplot(data = salamanders_counted,
                           aes(x = year,
                               y = n,
                               color = section)) +
-  
   geom_line(size = 2) +
   theme_bw() +
   scale_x_continuous(expand = c(0,0)) + 
@@ -76,17 +70,19 @@ salamander_line <- ggplot(data = salamanders_counted,
 
 salamander_line
 ```
+***Figure 1:** Salamander abundance*
+
 
 #### B: Salamander counts by channel classification
 
 
-**Table 1:** Salamander counts by channel classification. In 2017, the highest abundance of salamanders in both clear cut (CC) and old growth (OG) forests were found in cascades (67.1% and 62.8%, respectively), followed by side channels (24.5% and 23.1%), and then pools (8.4% and 14.1%). 
+***Table 1:** Salamander counts by channel classification. In 2017, the highest abundance of salamanders in both clear cut (CC) and old growth (OG) forests were found in cascades (67.1% and 62.8%, respectively), followed by side channels (24.5% and 23.1%), and then pools (8.4% and 14.1%).*
 
 ```{r}
 
 salamanders_2017 <- salamanders %>%   # contains only section and unittype
   filter(year == "2017") %>% 
-  select(section, unittype) %>% 
+  select(section, unittype, weight) %>% 
   filter(unittype != "IP")
 
 
@@ -192,7 +188,38 @@ salamander_cohend <- cohen.d(weight ~ section, data = salamander_17_d)
 ```
 Mean salamander weights did not differ significantly between clear cut and old growth forests [t(693)= `r salamander_ttest$statistic`, p= `r salamander_ttest$p.value`] The actual difference in mean values for clear cut and old growth forests is `r -diff(salamander_ttest$estimate)` grams. It should be noted that data for both locations are skewed, with distributions concentrated toward smaller weights.
  
- 
+#### E. 
+
+```{r}
+#Visualize
+
+graph_2017 <- ggplot(data = salamanders_2017,
+                       aes(x = unittype,
+                           y = weight)) +
+  geom_beeswarm()
+
+graph_2017
+
+# ANOVA
+
+salamander_aov <- aov(weight ~ unittype, data = salamanders_2017)
+summary(salamander_aov)
+
+# Post-hoc testing
+
+TukeyHSD(salamander_aov)
+
+# Only significant difference from SC-P
+
+salamander_2017_sc_p <- salamanders_2017 %>% 
+  filter(unittype %in% c("SC", "P"))
+
+cohen.d(salamander_2017_sc_p$weight, salamander_2017_sc_p$unittype)
+
+# Small effect size
+```
+
+
 ### **Summary**
 
 ### **References**
