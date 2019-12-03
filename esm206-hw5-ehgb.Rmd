@@ -49,7 +49,7 @@ library(RColorBrewer)
 
 #### A: Visualizing salamander abundance between old growth and clear cut sections of Mack Creek
 
-```{r}
+```{r echo=FALSE}
 salamanders <- read_csv("mack_creek_vertebrates.csv") %>% 
   clean_names() %>% 
   filter(species == "DITE") %>% 
