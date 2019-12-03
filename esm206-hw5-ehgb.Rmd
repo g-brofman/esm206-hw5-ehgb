@@ -59,7 +59,6 @@ salamanders <- read_csv("mack_creek_vertebrates.csv") %>%
 
 salamanders_counted <- salamanders %>%
   count(year, section)
-  
 
 salamander_line <- ggplot(data = salamanders_counted,
                           aes(x = year,
@@ -70,21 +69,20 @@ salamander_line <- ggplot(data = salamanders_counted,
   scale_x_continuous(expand = c(0,0)) + 
   scale_y_continuous(expand = c(0,0)) +
   labs(x = "Year", y = "Annual count") +
-  ggtitle("Annual count of salamanders (Onchorhyncus clarkii)")
+  ggtitle("Annual count of Pacific giant salamanders (Onchorhyncus clarkii)", "Clear cut vs. old growth sections of Mack Creek, OR (1993-2017)")
 
 salamander_line
 ```
-***Figure 1:** Salamander abundance*
+***Figure 1:** Relative salamander abundance between clear cut and old growth sections of the Mack Creek drainage in the western foothills of the Oregon Cascades*
 
 
 #### B: Salamander counts by channel classification
-
 
 ***Table 1:** Salamander counts by channel classification. In 2017, the highest abundance of salamanders in both clear cut (CC) and old growth (OG) forests were found in cascades (67.1% and 62.8%, respectively), followed by side channels (24.5% and 23.1%), and then pools (8.4% and 14.1%).*
 
 ```{r}
 
-salamanders_2017 <- salamanders %>%   # contains only section and unittype
+salamanders_2017 <- salamanders %>%   # contains only section, unittype, wight
   filter(year == "2017") %>% 
   select(section, unittype, weight) %>% 
   filter(unittype != "IP")
@@ -93,7 +91,6 @@ salamanders_2017 <- salamanders %>%   # contains only section and unittype
 # finding salamander counts by section and unit type (cascade, pool, side channel)
 salamander_2017_counts <- salamanders_2017 %>%  
   count(section, unittype)
-
 
 # making a table / wider format / contingency table
 salamander_2017_table <- salamander_2017_counts %>% 
@@ -106,7 +103,6 @@ salamander_2017_props <- salamander_2017_table %>%
   adorn_pct_formatting(digits = 1) %>% 
   adorn_ns(position = "front") %>% 
   rename(Section = section)
-
 
 kable(salamander_2017_props) %>% 
   kable_styling()
@@ -191,6 +187,16 @@ Mean salamander weights did not differ significantly between clear cut and old g
 ```{r}
 #Visualize
 
+summary_2017 <- salamanders_2017 %>% 
+  group_by(unittype) %>%
+  summarize(
+    mean_weight = mean(weight, na.rm = TRUE),
+    sd_weight = sd(weight, na.rm = TRUE),
+    se_weight = sd(weight, na.rm = TRUE) / sqrt(n()),
+    sample_size = n(),
+    var_weight = var(weight, na.rm = TRUE)
+  )
+
 mean_p_2017 <- salamanders_2017 %>% 
   filter(unittype == "Pool")
 
@@ -200,14 +206,18 @@ mean_c_2017 <- salamanders_2017 %>%
 mean_sc_2017 <- salamanders_2017 %>% 
   filter(unittype == "Side channel")
 
-graph_2017 <- ggplot(data = salamanders_2017,
+graph_2017 <- ggplot() +
+  geom_jitter(data = salamanders_2017,
                        aes(x = unittype,
                            y = weight)) +
-  geom_jitter() +
-  geom_point(data = mean_c_2017,
-            aes(y = mean(weight)),
-            color = "red",
-            size = 7)
+  geom_errorbar(data = summary_2017,
+                aes(x = unittype,
+                    ymin = 0,
+                    ymax = mean_weight + sd_weight),
+                color = "red",
+                width = .3) +
+  theme_bw() +
+  scale_y_continuous(expand = c(0,.5))
   
 annotate(geom = "text",
            label = ", mean = mean(mean_c_2017$weight)",
@@ -215,6 +225,10 @@ annotate(geom = "text",
            y = 25))
 
 graph_2017
+
+# ANOVA suitability - Levene's test
+
+leveneTest(weight ~ unittype, data = salamanders_2017)
 
 # ANOVA
 
@@ -234,7 +248,7 @@ cohen.d(salamander_2017_sc_p$weight, salamander_2017_sc_p$unittype)
 
 # Small effect size
 ```
-
+A Levene's Test revealed no significant difference in weight variances between pools, cascades, and side channels at the 0.05 significance level, so an ANOVA is warranted
 
 ### **Summary**
 
