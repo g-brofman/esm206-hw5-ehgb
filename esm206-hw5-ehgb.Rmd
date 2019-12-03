@@ -1,5 +1,5 @@
 ---
-title: "esm206-hw5-ehgb"
+title: "Pacific giant salamanders (Dicamptodon tenebrosus) in Mack Creek (near Blue River, Oregon): Size and channel location in old growth and previously clear cut forest sections"
 author: "Evan Heberlein & Grace Brofman"
 date: "11/25/2019"
 output: html_document
@@ -9,23 +9,27 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+![](salamanderpicture.jpg)
 
-Results:
-Section A visualize - Evan
-Section B table - Grace
-Section C chi squared - Grace
-Section D t-test - Grace
-Section E ANOVA - Evan
+***Image 1:** A Pacific Giant Salamander (Dicamptodon tenebrosus), enjoys its lunch.
+**Source:** [Industrius Info](https://www.industrious.info/55/08768-pacific-giant-salamander-eating.html)*
 
 ### **Introduction**
 
 Since 1993, data on Pacific Giant Salamanders has been collected in/along Mack Creek, part of the H.J. Andrews Experimental Forest in Western Cascade Mountains of Oregon. This data collection is part of a [larger effort](http://andlter.forestry.oregonstate.edu/data/abstract.aspx?dbcode=AS006), begun in 1987 to monitor local cutthroat trout populations (2). The H.J. Andrews Experimental Forest is a research site supported jointly by the University of Oregon and the U.S. Forest Service, and funded as part of the National Science Foundation’s Long-Term Ecological Research program (1). Data collection for Pacific Giant Salamanders occurs in two distinct areas, a coniferous old-growth forest and a clear-cut area (c. 1963) (2). Observations gathered pertaining to salamander abundance, weight, type, and location can provide insight as to how the species is affected by factors such as climate change, land use, and other disturbances over time (1).
 
-![](salamanderpicture.jpg)
-***Image 1:** A Pacific Giant Salamander (Dicamptodon tenebrosus), enjoys its lunch.
-**Source:** [Industrius Info](https://www.industrious.info/55/08768-pacific-giant-salamander-eating.html)*
+
 
 ### **Data and Methods**
+
+![](forestmap2.png)
+***Image 2:** Location overview of H.J. Andrews Experiment Forest
+**Source:** [H.J. Andrews Experimental Forest](https://andrewsforest.oregonstate.edu/data/map)*
+
+![](forestmap.jpg)
+***Image 3:** H.J. Andrews Experiment Forest
+**Source:** [H.J. Andrews Experimental Forest](https://andrewsforest.oregonstate.edu/data/map)*
+
 
 ### **Results**
 
@@ -188,7 +192,7 @@ Mean salamander weights did not differ significantly between clear cut and old g
  
 #### E. 
 
-```{r}
+```{r, include = FALSE}
 #Visualize
 
 mean_p_2017 <- salamanders_2017 %>% 
@@ -238,4 +242,17 @@ cohen.d(salamander_2017_sc_p$weight, salamander_2017_sc_p$unittype)
 
 ### **Summary**
 
+-In both clear cut and old growth forest, salamanders were found in the highest abundance in cascades, as opposed to side channels or pools. 
+
+-Forest condition does not have a significant effect on salamander location, nor does it have a significant effect of mean weights of salamander populations.
+
+-Channel classification has a small but significant effect on mean salamander weights. (say something here about skewed data/means?)
+
+
 ### **References**
+
+“Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to Present.” LTER Network Data Portal, portal.lternet.edu/nis/mapbrowse?packageid=knb-lter-and.4027.12.
+
+“H.J. Andrews Experimental Forest - Oregon State University.” H.J. Andrews Experimental Forest - Oregon State University, andrewsforest.oregonstate.edu/.
+
+“Pacific Giant Salamander Eating.” Industrious Info, www.industrious.info/55/08768-pacific-giant-salamander-eating.html.
