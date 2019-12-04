@@ -1,7 +1,7 @@
 ---
-title: "Pacific giant salamanders (Dicamptodon tenebrosus) in Mack Creek (near Blue River, Oregon): Size and channel location in old growth and previously clear cut forest sections"
+title: "Pacific giant salamanders (Dicamptodon tenebrosus) in Mack Creek, OR: Size and channel location in old growth and previously clear cut forest sections"
 author: "Evan Heberlein & Grace Brofman"
-date: "11/25/2019"
+date: "12/4/2019"
 output: html_document
 ---
 
@@ -11,25 +11,28 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ![](salamanderpicture.jpg)
 
-***Image 1:** A Pacific Giant Salamander (Dicamptodon tenebrosus), enjoys its lunch.
-**Source:** [Industrius Info](https://www.industrious.info/55/08768-pacific-giant-salamander-eating.html)*
+***Image 1:** A Pacific Giant Salamander (Dicamptodon tenebrosus), enjoys its lunch. (source: [Industrius Info](https://www.industrious.info/55/08768-pacific-giant-salamander-eating.html))*
 
 ### **Introduction**
 
 Since 1993, data on Pacific Giant Salamanders has been collected in/along Mack Creek, part of the H.J. Andrews Experimental Forest in Western Cascade Mountains of Oregon. This data collection is part of a [larger effort](http://andlter.forestry.oregonstate.edu/data/abstract.aspx?dbcode=AS006), begun in 1987 to monitor local cutthroat trout populations (2). The H.J. Andrews Experimental Forest is a research site supported jointly by the University of Oregon and the U.S. Forest Service, and funded as part of the National Science Foundation’s Long-Term Ecological Research program (1). Data collection for Pacific Giant Salamanders occurs in two distinct areas, a coniferous old-growth forest and a clear-cut area (c. 1963) (2). Observations gathered pertaining to salamander abundance, weight, type, and location can provide insight as to how the species is affected by factors such as climate change, land use, and other disturbances over time (1).
 
+![](forestmap2.png)
 
+***Image 2:** Location overview of H.J. Andrews Experiment Forest (source: [H.J. Andrews Experimental Forest](https://andrewsforest.oregonstate.edu/data/map))*
+
+~
 
 ### **Data and Methods**
 
-![](forestmap2.png)
-***Image 2:** Location overview of H.J. Andrews Experiment Forest
-**Source:** [H.J. Andrews Experimental Forest](https://andrewsforest.oregonstate.edu/data/map)*
+Data for Pacific giant salamander (Dicamptodon tenebrosus) abundance, size, and location from 1993-2017 were culled from the H.J. Andrews Experimental Forest LTER site. Salamanders were captured and measured using electrofishing equipment in Mack Creek, which flows through an upstream coniferous old growth forest and a downstream clear cut forest (harvested in 1963). Many variables were collected for each salamander observed, including weight and location both in the forest section and channel classification. Data were collected each year in August and September (1).
+
+RStudio (version 1.2.5001) was used to produce figures and analyze data via $\chi$^2^ tests, 2-sample Welch's t-tests, analysis of variance (ANOVA) tests, and requisite post-hoc testing. A significance level of ($\alpha$) of 0.05 was used for all tests for statistical significance. 
 
 ![](forestmap.jpg)
-***Image 3:** H.J. Andrews Experiment Forest
-**Source:** [H.J. Andrews Experimental Forest](https://andrewsforest.oregonstate.edu/data/map)*
+***Image 3:** H.J. Andrews Experiment Forest (source: [H.J. Andrews Experimental Forest](https://andrewsforest.oregonstate.edu/data/map))*
 
+~
 
 ### **Results**
 
@@ -49,7 +52,7 @@ library(RColorBrewer)
 
 #### A: Visualizing salamander abundance between old growth and clear cut sections of Mack Creek
 
-```{r echo=FALSE}
+```{r include=FALSE}
 salamanders <- read_csv("mack_creek_vertebrates.csv") %>% 
   clean_names() %>% 
   filter(species == "DITE") %>% 
@@ -73,12 +76,16 @@ salamander_line <- ggplot(data = salamanders_counted,
   scale_x_continuous(expand = c(0,0)) + 
   scale_y_continuous(expand = c(0,0)) +
   labs(x = "Year", y = "Annual count") +
-  ggtitle("Annual count of Pacific giant salamanders (Onchorhyncus clarkii)", "Clear cut vs. old growth sections of Mack Creek, OR (1993-2017)")
+  ggtitle("Annual count of Pacific giant salamanders (Onchorhyncus clarkii)", "Clear cut vs. old growth sections of Mack Creek, OR (1993-2017)") +
+  ggsave("fig1.png")
 
 salamander_line
 ```
-***Figure 1:** Relative salamander abundance between clear cut and old growth sections of the Mack Creek drainage in the western foothills of the Oregon Cascades*
+![](fig1.png)
 
+***Figure 1:** Relative salamander abundance between clear cut and old growth sections of the Mack Creek drainage in the western foothills of the Oregon Cascades. Clear cut sections exhibited lower salamander abundances relative to old growth until the final three years of the study, but population trends between sections largely track with one another over this 24-year period.*
+
+~
 
 #### B: Salamander counts by channel classification
 
@@ -116,6 +123,8 @@ kable(salamander_2017_props) %>%
 
 ```
 
+~
+
 #### C: Impacts of forest condition of salamander location
 
 
@@ -141,6 +150,7 @@ salamander_chi
 
 In 2017, there is not a significant effect of forest condition (old growth/ clear cut) on where in the channel salamanders are found (cascade/pool/sidechannel) ($\chi$^2^(`r salamander_chi$parameter`) =`r round(salamander_chi$statistic,2)`, *p* = `r round(salamander_chi$p.value, 3)`)
 
+~
 
 #### D: Relationship between forest condition and mean salamander weights
 
@@ -184,11 +194,13 @@ salamander_cohend <- cohen.d(weight ~ section, data = salamander_17_d)
 # is this necessary? since we cannot reject null hypothesis?
 
 ```
-Mean salamander weights did not differ significantly between clear cut and old growth forests [t(693)= `r round(salamander_ttest$statistic,2)`, p= `r round(salamander_ttest$p.value,3)`] The actual difference in mean values for clear cut and old growth forests is `r round(-diff(salamander_ttest$estimate),2)` grams. It should be noted that data for both locations are skewed, with distributions concentrated toward smaller weights.
- 
-#### E. 
+Mean salamander weights did not differ significantly between clear cut and old growth forests [t(693)= `r round(salamander_ttest$statistic,2)`, p= `r round(salamander_ttest$p.value,3)`]. The actual difference in mean values for clear cut and old growth forests is `r round(-diff(salamander_ttest$estimate),2)` grams. It should be noted that data for both locations are skewed, with distributions concentrated toward smaller weights.
 
-```{r, include = FALSE}
+~
+ 
+#### E. Relationship between channel classification and mean salamander weights
+
+```{r include=FALSE}
 #Visualize
 
 summary_2017 <- salamanders_2017 %>% 
@@ -201,32 +213,41 @@ summary_2017 <- salamanders_2017 %>%
     var_weight = var(weight, na.rm = TRUE)
   )
 
-mean_p_2017 <- salamanders_2017 %>% 
-  filter(unittype == "Pool")
-
-mean_c_2017 <- salamanders_2017 %>% 
-  filter(unittype == "Cascade")
-
-mean_sc_2017 <- salamanders_2017 %>% 
-  filter(unittype == "Side channel")
-
 graph_2017 <- ggplot() +
   geom_jitter(data = salamanders_2017,
                        aes(x = unittype,
                            y = weight)) +
   geom_errorbar(data = summary_2017,
                 aes(x = unittype,
-                    ymin = 0,
-                    ymax = mean_weight + sd_weight),
-                color = "red",
+                    ymin = mean_weight - se_weight,
+                    ymax = mean_weight + se_weight),
+                color = "orange",
                 width = .3) +
   theme_bw() +
-  scale_y_continuous(expand = c(0,.5))
-  
-annotate(geom = "text",
-           label = ", mean = mean(mean_c_2017$weight)",
-           aes(x = "Pool",
-           y = 25))
+  scale_y_continuous(expand = c(0,.5)) +
+  labs(x = "Channel classification",
+       y = "Weight (g)") +
+  ggtitle("Weight of of Pacific giant salamanders (Onchorhyncus clarkii)", "Cascades, pools, and side channels of Mack Creek, OR (2017)") +
+  theme_dark() +
+  annotate("text",
+           label = "n = 448",
+           x = 1,
+           y = 65,
+           size = 4,
+           color = "orange") +
+  annotate("text",
+           label = "n = 76",
+           x = 2,
+           y = 65,
+           size = 4,
+           color = "orange") +
+  annotate("text",
+           label = "n = 164",
+           x = 3,
+           y = 65,
+           size = 4,
+           color = "orange") +
+    ggsave("fig2.png")
 
 graph_2017
 
@@ -238,29 +259,44 @@ leveneTest(weight ~ unittype, data = salamanders_2017)
 
 salamander_aov <- aov(weight ~ unittype, data = salamanders_2017)
 summary(salamander_aov)
+aov_outputs <- unlist(summary(salamander_aov))
 
 # Post-hoc testing
 
 TukeyHSD(salamander_aov)
 
-# Only significant difference from SC-P
+# Only significant difference is from SC-P
 
 salamander_2017_sc_p <- salamanders_2017 %>% 
   filter(unittype %in% c("Side channel", "Pool"))
 
-cohen.d(salamander_2017_sc_p$weight, salamander_2017_sc_p$unittype)
+salamander_2017_t <- t.test(weight ~ unittype, data = salamander_2017_sc_p)
+
+tukey_cohen <- cohen.d(salamander_2017_sc_p$weight, salamander_2017_sc_p$unittype)
 
 # Small effect size
 ```
-A Levene's Test revealed no significant difference in weight variances between pools, cascades, and side channels at the 0.05 significance level, so an ANOVA is warranted
+![](fig2.png)
+
+***Figure 2:** Mean weight distributions of Pacific giant salamanders between three different habitat types in Mack Creek. Error bars show standard error about the mean **(cascade mean weight = `r round(summary_2017$mean_weight[1], 2)` g, pool mean weignt = `r round(summary_2017$mean_weight[2], 2)` g, side channel mean weight = `r round(summary_2017$mean_weight[3], 2)` g)**. Standard error is lowest in the cascade classification (with the highest sample size) and highest in the pool classification (with the lowest sample size), demonstrating a better estimation of the population mean at larger sample sizes. Salamanders appear to favor cascades in greater numbers to pools and side channels.*
+
+A Levene's Test revealed no significant difference in weight variances between pools, cascades, and side channels at the 0.05 significance level, so an analysis of variance (ANOVA) test is appropriate to investigate significant differences between these three channel classificiations.
+
+An ANOVA revealed significant differences in mean salamander weight across cascades, pools, and side channels (F(`r aov_outputs[1]`, `r aov_outputs[2]`) = `r round(aov_outputs[7],2)`, *p* = `r round(aov_outputs[9],3)`).
+
+Post-hoc Tukey's testing only revealed a significant difference in mean salamander weight between pools and side channels (F(df) = `r nrow(salamander_2017_sc_p) - 1`, p < 0.05), with a `r tukey_cohen$magnitude` effect size [Cohen's *d* = `r round(tukey_cohen$estimate, 3)`].
+
+The small sample size of the pool classification relative to cascade and side channel may have inflated the effect of high weight outliers on the pool mean weight, leading to the highest mean weight of the three classes and a significant mean weight difference with side channels. Comparing medians may be a better option to decrease the impact of outliers on the measure of central tendency across samples of varying size.
+
+Lower standard error in classifications with larger sample size is likely an effect of sample size, but the cascades classification with the highest sample size is likely preferred by salamanders, as opposed to a product of sampling error. These data do not present a particularly compelling relationship between salamander weight and channel classification, despite statistically significant results.
 
 ### **Summary**
 
--In both clear cut and old growth forest, salamanders were found in the highest abundance in cascades, as opposed to side channels or pools. 
+- In both clear cut and old growth forest, salamanders were found in the highest abundance in cascades, as opposed to side channels or pools. 
 
--Forest condition does not have a significant effect on salamander location, nor does it have a significant effect of mean weights of salamander populations.
+- Forest condition does not have a significant effect on salamander location, nor does it have a significant effect of mean weights of salamander populations.
 
--Channel classification has a small but significant effect on mean salamander weights. (say something here about skewed data/means?)
+- Channel classification has a small but significant effect on mean salamander weights. Salamanders observed in pools had a significantly higher mean weight than salamanders observed in side channels, but the effect size was small and may have been affected by data skew.
 
 
 ### **References**
